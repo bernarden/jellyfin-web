@@ -649,7 +649,8 @@ function truncatePlayOptions(playOptions) {
         mediaSourceId: playOptions.mediaSourceId,
         audioStreamIndex: playOptions.audioStreamIndex,
         subtitleStreamIndex: playOptions.subtitleStreamIndex,
-        startPositionTicks: playOptions.startPositionTicks
+        startPositionTicks: playOptions.startPositionTicks,
+        shuffle: playOptions.shuffle
     };
 }
 
@@ -2562,7 +2563,11 @@ export class PlaybackManager {
         }
 
         function playAfterBitrateDetect(maxBitrate, item, playOptions, onPlaybackStartedFn, prevSource) {
-            const startPosition = playOptions.startPositionTicks;
+            let startPosition = playOptions.startPositionTicks;
+            if(playOptions.shuffle){
+                const multiplier = Math.random() * (0.9 - 0.1) + 0.1;
+                startPosition = Math.floor(multiplier * item.RunTimeTicks);
+            }
 
             const player = getPlayer(item, playOptions);
             const activePlayer = self._currentPlayer;
@@ -3092,8 +3097,10 @@ export class PlaybackManager {
 
             if (newItemInfo) {
                 console.debug('playing next track');
-
-                const newItemPlayOptions = newItemInfo.item.playOptions || getDefaultPlayOptions();
+                const currentPlayOptions = self._playQueueManager.getCurrentItem()?.playOptions;
+                let newItemPlayOptions = newItemInfo.item.playOptions || getDefaultPlayOptions();
+                newItemPlayOptions = {...newItemPlayOptions, shuffle: currentPlayOptions.shuffle};
+                newItemInfo.item.playOptions = newItemPlayOptions;
 
                 playInternal(newItemInfo.item, newItemPlayOptions, function () {
                     setPlaylistState(newItemInfo.item.PlaylistItemId, newItemInfo.index);

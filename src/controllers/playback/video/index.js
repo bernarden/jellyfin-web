@@ -344,6 +344,12 @@ export default function (view) {
             elem.classList.remove('hide');
             elem.classList.remove('videoOsdBottom-hidden');
 
+            focusElement ||= elem.querySelector('.btnPause');
+
+            if (layoutManager.tv && currentItem.playOptions.shuffle){
+                focusElement = elem.querySelector('.btnNextTrack');
+            }
+            
             if (!layoutManager.mobile) {
                 _focus(focusElement);
             }
@@ -1674,7 +1680,6 @@ export default function (view) {
             dom.addEventListener(document, window.PointerEvent ? 'pointermove' : 'mousemove', onPointerMove, {
                 passive: true
             });
-            showOsd();
             inputManager.on(window, onInputCommand);
             document.addEventListener('keydown', onKeyDown);
             dom.addEventListener(document, 'keydown', onKeyDownCapture, {
@@ -1947,6 +1952,7 @@ export default function (view) {
         playbackManager.nextChapter(currentPlayer);
     });
     view.querySelector('.btnNextTrack').addEventListener('click', function () {
+        hideOsd()
         playbackManager.nextTrack(currentPlayer);
     });
     btnRewind.addEventListener('click', function () {

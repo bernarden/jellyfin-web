@@ -21,7 +21,7 @@ const AppHeader: FC<AppHeaderParams> = ({
             <div className='mainDrawer hide'>
                 <div className='mainDrawer-scrollContainer scrollContainer focuscontainer-y' />
             </div>
-            <div className='skinHeader focuscontainer-x' />
+            <div className='skinHeader focuscontainer-x osdHeader-hidden' />
             <div className='mainDrawerHandle' />
         </div>
     );

@@ -1829,6 +1829,9 @@ export class HtmlVideoPlayer {
 
                 html += '</video>';
 
+                // const headerElement = document.querySelector('.skinHeader');
+                // headerElement.classList.add('osdHeader-hidden');
+
                 playerDlg.innerHTML = html;
                 const videoElement = playerDlg.querySelector('video');
 
@@ -1846,9 +1849,6 @@ export class HtmlVideoPlayer {
                 videoElement.addEventListener('click', this.onClick);
                 videoElement.addEventListener('dblclick', this.onDblClick);
                 videoElement.addEventListener('waiting', this.onWaiting);
-                if (options.backdropUrl) {
-                    videoElement.poster = options.backdropUrl;
-                }
 
                 document.body.insertBefore(playerDlg, document.body.firstChild);
                 this.#videoDialog = playerDlg;
@@ -1892,11 +1892,6 @@ export class HtmlVideoPlayer {
             }
 
             const videoElement = dlg.querySelector('video');
-            if (options.backdropUrl) {
-                // update backdrop image
-                videoElement.poster = options.backdropUrl;
-            }
-
             return Promise.resolve(videoElement);
         }
     }

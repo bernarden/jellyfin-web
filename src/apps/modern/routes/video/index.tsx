@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
  */
 const VideoPage: FC = () => {
     const documentRef = useRef<Document>(document);
-    const [ isVisible, setIsVisible ] = useState(true);
+    const [ isVisible, setIsVisible ] = useState(false);
     const [ videoTitle, setVideoTitle ] = useState<string>('');
 
     const onShowVideoOsd = (_e: Event, isShowing: boolean) => {

@@ -45,6 +45,7 @@ export default function (view, params, tabContent, options) {
         return ApiClient.getItems(ApiClient.getCurrentUserId(), newQuery).then(({ Items }) => {
             playbackManager.play({
                 items: Items,
+                // shuffle: true,
                 autoplay: true
             });
         }).finally(() => {

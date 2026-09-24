@@ -771,8 +771,6 @@ function setTitle (title) {
         pageTitleElement.style.backgroundImage = null;
         pageTitleElement.innerText = html || '';
     }
-
-    document.title = title || documentTitle;
 }
 
 function setTransparentMenu (transparent) {

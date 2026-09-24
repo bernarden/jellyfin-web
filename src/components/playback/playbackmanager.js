@@ -665,7 +665,8 @@ function truncatePlayOptions(playOptions) {
         mediaSourceId: playOptions.mediaSourceId,
         audioStreamIndex: playOptions.audioStreamIndex,
         subtitleStreamIndex: playOptions.subtitleStreamIndex,
-        startPositionTicks: playOptions.startPositionTicks
+        startPositionTicks: playOptions.startPositionTicks,
+        shuffle: playOptions.shuffle
     };
 }
 
@@ -2633,7 +2634,11 @@ export class PlaybackManager {
         }
 
         function playAfterBitrateDetect(maxBitrate, item, playOptions, onPlaybackStartedFn, prevSource) {
-            const startPosition = playOptions.startPositionTicks;
+            let startPosition = playOptions.startPositionTicks;
+            if (playOptions.shuffle){
+                const multiplier = Math.random() * (0.9 - 0.1) + 0.1;
+                startPosition = Math.floor(multiplier * item.RunTimeTicks);
+            }
 
             const player = getPlayer(item, playOptions);
             const activePlayer = self._currentPlayer;
@@ -3219,11 +3224,16 @@ export class PlaybackManager {
                 console.debug('playing next track');
 
                 const prevSource = getPreviousSource(player);
-                const newItemPlayOptions = newItemInfo.item.playOptions || getDefaultPlayOptions();
+                let newItemPlayOptions = newItemInfo.item.playOptions || getDefaultPlayOptions();
                 const versionSource = getMatchingMediaSource(newItemInfo.item.MediaSources, prevSource);
 
                 if (versionSource) {
                     newItemPlayOptions.mediaSourceId = versionSource.Id;
+                }
+
+                const currentPlayOptions = self._playQueueManager.getCurrentItem()?.playOptions;
+                if (currentPlayOptions) {
+                    newItemPlayOptions.shuffle = currentPlayOptions.shuffle;
                 }
 
                 playInternal(newItemInfo.item, newItemPlayOptions, function () {
